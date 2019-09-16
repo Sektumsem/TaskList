@@ -10,6 +10,7 @@ loadEventListener();
 
 function loadEventListener(){
     form.addEventListener('submit', addTask);
+    taskList.addEventListener('click', removeTask)
 }
 
 function addTask(e){
@@ -18,13 +19,34 @@ function addTask(e){
     li.appendChild(document.createTextNode(taskInput.value));
     const deleteLink = document.createElement('a');
     deleteLink.className = 'delete-item secondary-content';
-    deleteLink.innerHTML = '<i class="fa-remove"></i>';
+    deleteLink.innerHTML = '<i class="fa fa-remove"></i>';
     li.appendChild(deleteLink);
     taskList.appendChild(li);
 
+    storeTaskInLocalStorage(taskInput.value);
 
     console.log(li);
 
 
     e.preventDefault();
+}
+
+function storeTaskInLocalStorage(task){
+    let tasks;
+    if(localStorage.getItem('tasks')===null){
+        tasks=[];
+    }
+    else{
+        tasks=JSON.parse(localStorage.getItem('tasks'));
+    }
+    tasks.push(task);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function removeTask(e){
+    if(e.target.parentElement.classList.contains('delete-item')){
+        if(confirm('Are you shure you want to delete the itim?')){
+            e.target.parentElement.parentElement.remove();
+        }
+    }
 }
